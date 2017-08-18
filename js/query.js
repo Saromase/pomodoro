@@ -3,7 +3,8 @@ var minute = 0;
 var second = 0;
 var interval = 0;
 var set = 1;
-
+var i = 0;
+var progress = 0;
 $(document).ready(function () {
     $("#start").click(function () {
         if (time == 0) {
@@ -35,6 +36,7 @@ $(document).ready(function () {
         time = 300;
         minute = time / 60;
         second = 0;
+        progress = 0.3333333;
         displayClearTime(minute, second);
     });
 
@@ -42,6 +44,7 @@ $(document).ready(function () {
         time = 600;
         minute = time / 60;
         second = 0;
+        progress = 0.1666666;
         displayClearTime(minute, second);
     });
 
@@ -49,9 +52,10 @@ $(document).ready(function () {
         time = 1500;
         minute = time / 60;
         second = 0;
+        progress = 0.066666;
         displayClearTime(minute, second);
     });
-    
+
     $(document).keypress(function (e) {
         if (e.which == 32) {
             if (set == 0) {
@@ -78,7 +82,12 @@ function displayClearTime(m, s) {
     return $("#time").text(m + " : " + s) + $("title").text(m + " : " + s + " - Pomodoro");
 }
 
+
+
 function addSecond() {
+    i += progress;
+$('.progress-bar').css('width', i+'%').attr('aria-valuenow', i).attr('aria-valuemax', progress * time);
+    
     if (time != 0) {
         if (second == 0) {
             minute--;
@@ -89,6 +98,7 @@ function addSecond() {
             time--;
         }
     }
+
     if (time <= 0) {
         time = 0
         $("#time").text(time);
