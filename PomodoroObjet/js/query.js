@@ -8,17 +8,17 @@ var Timer = {
         this.minute = minute;
         this.second = second;
         this.status = status;
-        this.displayClear();
+        Timer.displayClear();
     },
     clock: function () {
-        if (this['time'] != 0) {
-            this['second']--;
-            this['time']--;
-            if (this['second'] < 0) {
-                this['minute']--;
-                this['second'] = 59
+        if (Timer['time'] != 0) {
+            Timer['second']--;
+            Timer['time']--;
+            if (Timer['second'] < 0) {
+                Timer['minute']--;
+                Timer['second'] = 59
             }
-            this.displayClear();
+            Timer.displayClear();
         }
     },
     displayClear: function () {
@@ -27,25 +27,25 @@ var Timer = {
         $("#time").text(m + " : " + s);
     },
     start: function () {
-        if (this['status'] === "initial") {
-            this.period(1500, 25, 0, "on");
-            this.displayClear();
+        if (Timer['status'] === "initial") {
+            Timer.period(1500, 25, 0, "on");
+            Timer.displayClear();
             $("#start").text("Pause");
-            interval = setInterval(this.clock, 1000);
-        } else if (this['status'] === "on") {
-            this.status = "off";
-            this.displayClear();
+            interval = setInterval(Timer.clock, 1000);
+        } else if (Timer['status'] === "on") {
+            Timer.status = "off";
+            Timer.displayClear();
             $("#start").text("Play");
             clearInterval(interval);
         } else {
-            this.status = "on";
-            this.displayClear();
+            Timer.status = "on";
+            Timer.displayClear();
             $("#start").text("Pause");
-            interval = setInterval(this.clock, 1000);
+            interval = setInterval(Timer.clock, 1000);
         }
     },
     reset: function () {
-        this.period(0, 0, 0, "initial");
+        Timer.period(0, 0, 0, "initial");
         $("#start").text("Start");
         clearInterval(interval);
     }
