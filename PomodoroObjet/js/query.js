@@ -1,116 +1,88 @@
-var timer = {
+var Timer = {
     time: 0,
     minute: 0,
     second: 0,
     status: "initial",
-    set: function (total, minute, second) {
+    period: function (total, minute, second, status) {
         this.time = total;
         this.minute = minute;
         this.second = second;
-    },
-    period: function (total, minute, second, status) {
-        this.set(total, minute, second);
         this.status = status;
-    }
-}
-
-function clock() {
-    if (timer['time'] != 0) {
-        timer['second']--;
-        timer['time']--;
-        if (timer['second'] < 0) {
-            timer['minute']--;
-            timer['second'] = 59
+        Timer.displayClear();
+    },
+    clock: function () {
+        if (Timer['time'] != 0) {
+            Timer['second']--;
+            Timer['time']--;
+            if (Timer['second'] < 0) {
+                Timer['minute']--;
+                Timer['second'] = 59
+            }
+            Timer.displayClear();
         }
-        displayClear(timer['second'], timer['minute'])
+    },
+    displayClear: function () {
+        var s = this.second < 10 ? "0" + this.second : this.second;
+        var m = this.minute < 10 ? "0" + this.minute : this.minute;
+        $("#time").text(m + " : " + s);
+    },
+    start: function () {
+        if (Timer['status'] === "initial") {
+            Timer.period(1500, 25, 0, "on");
+            Timer.displayClear();
+            $("#start").text("Pause");
+            interval = setInterval(Timer.clock, 1000);
+        } else if (Timer['status'] === "on") {
+            Timer.status = "off";
+            Timer.displayClear();
+            $("#start").text("Play");
+            clearInterval(interval);
+        } else {
+            Timer.status = "on";
+            Timer.displayClear();
+            $("#start").text("Pause");
+            interval = setInterval(Timer.clock, 1000);
+        }
     }
-}
-
-function displayClear(s, m) {
-    if (s < 10) {
-        s = "0" + s;
-    }
-    if (m < 10) {
-        m = "0" + m;
-    }
-    $("#time").text(m + " : " + s);
 }
 
 $(document).ready(function () {
     var interval;
     $("#start").click(function () {
-        if (timer['status'] === "initial") {
-            timer.period(1500, 25, 0, "on");
-            displayClear(timer['second'], timer['minute']);
-            $("#start").text("Pause");
-            interval = setInterval(clock, 1000);
-        } else if (timer['status'] === "on") {
-            timer.status = "off";
-            displayClear(timer['second'], timer['minute']);
-            $("#start").text("Play");
-            clearInterval(interval);
-        } else {
-            timer.status = "on";
-            displayClear(timer['second'], timer['minute']);
-            $("#start").text("Pause");
-            interval = setInterval(clock, 1000);
-        }
+        Timer.start();
     });
     $("#reset").click(function () {
-        timer.period(0, 0, 0, "initial");
-        displayClear(timer['second'], timer['minute']);
+        Timer.period(0, 0, 0, "initial");
         $("#start").text("Start");
         clearInterval(interval);
     });
     $("#300").click(function () {
-        timer.period(300, 5, 0, "off");
-        displayClear(timer['second'], timer['minute']);
+        Timer.period(300, 5, 0, "off");
     });
     $("#600").click(function () {
-        timer.period(600, 10, 0, "off");
-        displayClear(timer['second'], timer['minute']);
+        Timer.period(600, 10, 0, "off");
     });
     $("#1500").click(function () {
-        timer.period(1500, 25, 0, "off");
-        displayClear(timer['second'], timer['minute']);
+        Timer.period(1500, 25, 0, "off");
     });
     $(document).keypress(function (e) {
         switch (e.which) {
             case 13: // Enter
-                if (timer['status'] === "initial") {
-                    timer.period(1500, 25, 0, "on");
-                    displayClear(timer['second'], timer['minute']);
-                    $("#start").text("Pause");
-                    interval = setInterval(clock, 1000);
-                } else if (timer['status'] === "on") {
-                    timer.status = "off";
-                    displayClear(timer['second'], timer['minute']);
-                    $("#start").text("Play");
-                    clearInterval(interval);
-                } else {
-                    timer.status = "on";
-                    displayClear(timer['second'], timer['minute']);
-                    $("#start").text("Pause");
-                    interval = setInterval(clock, 1000);
-                }
+                Timer.start();
                 break;
             case 32: // SPACE
-                timer.period(0, 0, 0, "initial");
-                displayClear(timer['second'], timer['minute']);
+                Timer.period(0, 0, 0, "initial");
                 $("#start").text("Start");
                 clearInterval(interval);
                 break;
             case 49: // SHIFT + &
-                timer.period(300, 5, 0, "off");
-                displayClear(timer['second'], timer['minute']);
+                Timer.period(300, 5, 0, "off");
                 break;
             case 50: // SHIFT + é
-                timer.period(600, 10, 0, "off");
-                displayClear(timer['second'], timer['minute']);
+                Timer.period(600, 10, 0, "off");
                 break;
             case 51: // SHIFT + "
-                timer.period(1500, 25, 0, "off");
-                displayClear(timer['second'], timer['minute']);
+                Timer.period(1500, 25, 0, "off");
                 break;
         }
     });
