@@ -8,17 +8,17 @@ var Timer = {
         this.minute = minute;
         this.second = second;
         this.status = status;
-        Timer.displayClear();
+        this.displayClear();
     },
     clock: function () {
-        if (Timer['time'] != 0) {
-            Timer['second']--;
-            Timer['time']--;
-            if (Timer['second'] < 0) {
-                Timer['minute']--;
-                Timer['second'] = 59
+        if (this['time'] != 0) {
+            this['second']--;
+            this['time']--;
+            if (this['second'] < 0) {
+                this['minute']--;
+                this['second'] = 59
             }
-            Timer.displayClear();
+            this.displayClear();
         }
     },
     displayClear: function () {
@@ -27,34 +27,36 @@ var Timer = {
         $("#time").text(m + " : " + s);
     },
     start: function () {
-        if (Timer['status'] === "initial") {
-            Timer.period(1500, 25, 0, "on");
-            Timer.displayClear();
+        if (this['status'] === "initial") {
+            this.period(1500, 25, 0, "on");
+            this.displayClear();
             $("#start").text("Pause");
-            interval = setInterval(Timer.clock, 1000);
-        } else if (Timer['status'] === "on") {
-            Timer.status = "off";
-            Timer.displayClear();
+            interval = setInterval(this.clock, 1000);
+        } else if (this['status'] === "on") {
+            this.status = "off";
+            this.displayClear();
             $("#start").text("Play");
             clearInterval(interval);
         } else {
-            Timer.status = "on";
-            Timer.displayClear();
+            this.status = "on";
+            this.displayClear();
             $("#start").text("Pause");
-            interval = setInterval(Timer.clock, 1000);
+            interval = setInterval(this.clock, 1000);
         }
+    },
+    reset: function () {
+        this.period(0, 0, 0, "initial");
+        $("#start").text("Start");
+        clearInterval(interval);
     }
 }
-
 $(document).ready(function () {
     var interval;
     $("#start").click(function () {
         Timer.start();
     });
     $("#reset").click(function () {
-        Timer.period(0, 0, 0, "initial");
-        $("#start").text("Start");
-        clearInterval(interval);
+        Timer.reset();
     });
     $("#300").click(function () {
         Timer.period(300, 5, 0, "off");
@@ -71,9 +73,7 @@ $(document).ready(function () {
                 Timer.start();
                 break;
             case 32: // SPACE
-                Timer.period(0, 0, 0, "initial");
-                $("#start").text("Start");
-                clearInterval(interval);
+                Timer.reset();
                 break;
             case 49: // SHIFT + &
                 Timer.period(300, 5, 0, "off");
