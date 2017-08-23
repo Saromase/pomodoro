@@ -8,6 +8,10 @@ var Timer = {
         this.minute = minute;
         this.second = second;
         this.status = status;
+        if (typeof interval !== "undefined") {
+            clearInterval(interval);
+            $("#start").text("Start");
+        }
         Timer.displayClear();
     },
     clock: function () {
@@ -25,6 +29,7 @@ var Timer = {
         var s = this.second < 10 ? "0" + this.second : this.second;
         var m = this.minute < 10 ? "0" + this.minute : this.minute;
         $("#time").text(m + " : " + s);
+        $("title").text(m + " : " + s + " - Pomodoro");
     },
     start: function () {
         if (Timer['status'] === "initial") {
@@ -37,6 +42,11 @@ var Timer = {
             Timer.displayClear();
             $("#start").text("Play");
             clearInterval(interval);
+        } else if (Timer['status'] === "set") {
+            Timer.status = "on";
+            Timer.displayClear();
+            $("#start").text("Pause");
+            interval = setInterval(Timer.clock, 1000);
         } else {
             Timer.status = "on";
             Timer.displayClear();
@@ -59,13 +69,13 @@ $(document).ready(function () {
         Timer.reset();
     });
     $("#300").click(function () {
-        Timer.period(300, 5, 0, "off");
+        Timer.period(300, 5, 0, "set");
     });
     $("#600").click(function () {
-        Timer.period(600, 10, 0, "off");
+        Timer.period(600, 10, 0, "set");
     });
     $("#1500").click(function () {
-        Timer.period(1500, 25, 0, "off");
+        Timer.period(1500, 25, 0, "set");
     });
     $(document).keypress(function (e) {
         switch (e.which) {
