@@ -15,7 +15,12 @@ var Timer = {
         Timer.displayClear();
     },
     clock: function () {
-        if (Timer['time'] != 0) {
+        if (Timer['time'] === 0) {
+            clearInterval(interval);
+            console.log('tt');
+            Timer.status = "initial";
+            $("#start").text("Start");
+        } else if (Timer['time'] != 0) {
             Timer['second']--;
             Timer['time']--;
             if (Timer['second'] < 0) {
